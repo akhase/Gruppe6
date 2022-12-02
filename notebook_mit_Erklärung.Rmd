@@ -3,41 +3,118 @@ title: "Gruppe 6 Notebook:)"
 output: html_notebook
 ---
 To Do's:
-- Spalte Warengruppe wieder einfügen-> wie fügt man unterschiedlich lange df zsm?
-- Heatmap erstellen
+- Spalte Warengruppe wieder einfügen-> wie fügt man unterschiedlich lange df zsm? +
+- Heatmap erstellen? Welcher Graph ist sinnvoll
 - lineares Modell mit unterschiedlichen Parametern auffüllen
 - lineares Modell: was kann man generell verändern
 - Ergebnisse des Modells plotten
 - Wie interpretiert man die Werte des Modells
-- wie shelved man hier Changes?
-- wie Code Änderungen sehen?
+- wie shelved man hier Changes? ->cmd?
+
+
+
 
 Basics:
 
 $ : Auf einzelne Spalten zugreifen und diese als Vektor auslesen
     Bsp: wetter$Datum
     - damit können auch neue Spalten hinzugefügt werden
+nrow: zeigt Anzahl der Spalten in einem df an
+
+```{r}
+```
+
+
 ```{r}
 #libraries importieren
 library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+```
+
+
+
+```{r}
+#csvs Einlesen
+umsatzdaten_gekuerzt <- read_csv("umsatzdaten_gekuerzt.csv")
+kiwo <- read_csv("kiwo.csv")
+wetter<- read_csv("wetter.csv")
+df_holidays <- read.csv("Ferien_Feiertage_sh.csv", header=TRUE, sep = ";")
+
+```
+Anmerkung:
+Im Folgenden schmeiße ich die Warengruppe einmal raus, damit man das Datum als "uniquen" Value hat...
+Eventuell sollten wir nochmal überlegen, ob man die Warengruppe nicht doch irgendwie verwenden kann:)
+
+```{r}
+
+umsatzdaten_gekuerzt <- umsatzdaten_gekuerzt %>% 
+  group_by(Datum) %>% 
+  summarise(umsatz = sum(Umsatz))
+
+#check ob Datum unique Wert ist
+nrow(umsatzdaten_gekuerzt)==length(unique(umsatzdaten_gekuerzt$Datum))
+```
+DAmit kann man sehen, welche Klassen ein Df besitzt (zB Date)
+str(lapply(df, class))
+
+```{r}
+df_umsatz_und_wetter <- merge(umsatzdaten_gekuerzt,wetter, by.x="Datum", by.y="Datum", sep=",", all = FALSE) 
+
+#check, ob im neuen Datensatz Wetter nun unique ist
+nrow(df_umsatz_und_wetter)==length(unique(df_umsatz_und_wetter$Datum))
+View(df_umsatz_und_wetter)
+
+```
+
+```{r}
+
+#df_all <- merge(df_umsatz_und_wetter, kiwo, by.x="Datum", by.y="Datum", all=TRUE)
+df_all <- merge(df_umsatz_und_wetter, kiwo, by.x="Datum", by.y="Datum", all = TRUE)
+#Warengruppenspalte löschen; da falsche Werte drin
+
+nrow(df_all)==length(unique(df_all$Datum))
+
+#in der kiwo Spalte alle nan werte durch 0 ersetzen
+df_all$KielerWoche[is.na(df_all$KielerWoche)] <- 0
+
+
+
+df_holidays <- mutate(df_holidays, Datum = as.Date(Datum, format= "%Y-%m-%d"))
+
+
+#View(df_all)
+View(df_holidays)
+str(lapply(df_holidays, class))
+str(lapply(df_all, class))
+
+
 ```
 
 
 ```{r}
+#Ferien und Feiertage anhängen
+
+df_all <- merge(df_all, df_holidays, by.x="Datum", by.y="Datum")
+
+View(df_all)
+nrow(df_all)==length(unique(df_all$Datum))
+
+```
+
 #Warengruppe an Tabelle anhängen
+Notiz:In unserer UWK Tabelle hatte die Spalte Warengruppe gefehlt. Da ich alle df neu erstellt habe, ist das jetzt egal, aber hier sieht man wie man eine einzelne Spalte einem df anhängen könnte:)
 
 df_alles <- table_UWK
+#neues df aus  umsatzdaten_gekuerzt erstellen und alle übrigen Spalten droppen außer Warengruppe
+df_warengruppe <- subset(umsatzdaten_gekuerzt, select = -c(Umsatz))
 
-#Zeilen angeben lassen
-nrow(df_alles)
-nrow(umsatzdaten_gekuerzt)
-nrow(table_UWK)
+#beiden dataframes mergen
+# all = true sorgt dafür, dass wenn keine Werte vorhanden sind, einfach NA`s eingetragen werden
+df_alles <- merge(df_alles,df_warengruppe, by.x="Datum",by.y="Datum", all = TRUE)
 
-View(df_alles)
 
-```
-
-```{r}
 #modell trainieren
 
 #mit einem Parameter
@@ -49,6 +126,16 @@ summary(mod)
 mod_two <- lm(Umsatz ~ Bewoelkung+Temperatur, df_alles)
 summary(mod_two)
 
+## 3 Parameter
+
 ```
 
+#heatmap
+#irgendwas plotten:D
+#NA's müssen bereinigt werden! für ordentlichen Plot #wie ist es mit dublizierten Werten?
+df_complete <- df_alles[complete.cases(df_alles), ]
+
+ggplot(df_complete, aes(Umsatz, Warengruppe),oob=squish)+geom_tile()
+
+```
 

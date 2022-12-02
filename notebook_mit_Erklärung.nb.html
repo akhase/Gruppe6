@@ -1753,115 +1753,226 @@ display: none;
 
 <!-- rnb-text-begin -->
 <p>To Do’s: - Spalte Warengruppe wieder einfügen-&gt; wie fügt man
-unterschiedlich lange df zsm? - Heatmap erstellen - lineares Modell mit
-unterschiedlichen Parametern auffüllen - lineares Modell: was kann man
-generell verändern - Ergebnisse des Modells plotten - Wie interpretiert
-man die Werte des Modells - wie shelved man hier Changes? - wie Code
-Änderungen sehen?</p>
+unterschiedlich lange df zsm? + - Heatmap erstellen? Welcher Graph ist
+sinnvoll - lineares Modell mit unterschiedlichen Parametern auffüllen -
+lineares Modell: was kann man generell verändern - Ergebnisse des
+Modells plotten - Wie interpretiert man die Werte des Modells - wie
+shelved man hier Changes? -&gt;cmd?</p>
 <p>Basics:</p>
 <p>$ : Auf einzelne Spalten zugreifen und diese als Vektor auslesen Bsp:
-wetter$Datum - damit können auch neue Spalten hinzugefügt werden</p>
+wetter$Datum - damit können auch neue Spalten hinzugefügt werden nrow:
+zeigt Anzahl der Spalten in einem df an</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2xpYnJhcmllcyBpbXBvcnRpZXJlblxubGlicmFyeShyZWFkcilcbmBgYCJ9 -->
-<pre class="r"><code>#libraries importieren
-library(readr)</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1dhcmVuZ3J1cHBlIGFuIFRhYmVsbGUgYW5ow6RuZ2VuXG5cbmRmX2FsbGVzIDwtIHRhYmxlX1VXS1xuXG4jWmVpbGVuIGFuZ2ViZW4gbGFzc2VuXG5ucm93KGRmX2FsbGVzKVxuYGBgIn0= -->
-<pre class="r"><code>#Warengruppe an Tabelle anhängen
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2xpYnJhcmllcyBpbXBvcnRpZXJlblxubGlicmFyeShyZWFkcilcbmxpYnJhcnkoZ2dwbG90MilcbmxpYnJhcnkoZHBseXIpXG5gYGAifQ== -->
+<pre class="r"><code>#libraries importieren
+library(readr)
+library(ggplot2)
+library(dplyr)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hlIFBha2V0OiDigJhkcGx5cuKAmVxuXG5EaWUgZm9sZ2VuZGVuIE9iamVrdGUgc2luZCBtYXNraWVydCB2b24g4oCYcGFja2FnZTpzdGF0c+KAmTpcblxuICAgIGZpbHRlciwgbGFnXG5cbkRpZSBmb2xnZW5kZW4gT2JqZWt0ZSBzaW5kIG1hc2tpZXJ0IHZvbiDigJhwYWNrYWdlOmJhc2XigJk6XG5cbiAgICBpbnRlcnNlY3QsIHNldGRpZmYsIHNldGVxdWFsLCB1bmlvblxuIn0= -->
+<pre><code>
+Attache Paket: ‘dplyr’
 
-df_alles &lt;- table_UWK
+Die folgenden Objekte sind maskiert von ‘package:stats’:
 
-#Zeilen angeben lassen
-nrow(df_alles)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDIxMzRcbiJ9 -->
-<pre><code>[1] 2134</code></pre>
+    filter, lag
+
+Die folgenden Objekte sind maskiert von ‘package:base’:
+
+    intersect, setdiff, setequal, union</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyh1bXNhdHpkYXRlbl9nZWt1ZXJ6dClcbmBgYCJ9 -->
-<pre class="r"><code>nrow(umsatzdaten_gekuerzt)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShsdWJyaWRhdGUpXG5gYGAifQ== -->
+<pre class="r"><code>library(lubridate)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEwOTA5XG4ifQ== -->
-<pre><code>[1] 10909</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hlIFBha2V0OiDigJhsdWJyaWRhdGXigJlcblxuRGllIGZvbGdlbmRlbiBPYmpla3RlIHNpbmQgbWFza2llcnQgdm9uIOKAmHBhY2thZ2U6YmFzZeKAmTpcblxuICAgIGRhdGUsIGludGVyc2VjdCwgc2V0ZGlmZiwgdW5pb25cbiJ9 -->
+<pre><code>
+Attache Paket: ‘lubridate’
+
+Die folgenden Objekte sind maskiert von ‘package:base’:
+
+    date, intersect, setdiff, union</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyh0YWJsZV9VV0spXG5gYGAifQ== -->
-<pre class="r"><code>nrow(table_UWK)</code></pre>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2NzdnMgRWlubGVzZW5cbnVtc2F0emRhdGVuX2dla3Vlcnp0IDwtIHJlYWRfY3N2KFwidW1zYXR6ZGF0ZW5fZ2VrdWVyenQuY3N2XCIpXG5gYGAifQ== -->
+<pre class="r"><code>#csvs Einlesen
+umsatzdaten_gekuerzt &lt;- read_csv(&quot;umsatzdaten_gekuerzt.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDIxMzRcbiJ9 -->
-<pre><code>[1] 2134</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTA5MDkgQ29sdW1uczogM+KUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCIsXCJcbmRibCAgKDIpOiBXYXJlbmdydXBwZSwgVW1zYXR6XG5kYXRlICgxKTogRGF0dW1cbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
+<pre><code>Rows: 10909 Columns: 3── Column specification ───────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+dbl  (2): Warengruppe, Umsatz
+date (1): Datum
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVmlldyhkZl9hbGxlcylcblxuYGBgIn0= -->
-<pre class="r"><code>View(df_alles)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxua2l3byA8LSByZWFkX2NzdihcImtpd28uY3N2XCIpXG5gYGAifQ== -->
+<pre class="r"><code>kiwo &lt;- read_csv(&quot;kiwo.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNzIgQ29sdW1uczogMuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCIsXCJcbmRibCAgKDEpOiBLaWVsZXJXb2NoZVxuZGF0ZSAoMSk6IERhdHVtXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
+<pre><code>Rows: 72 Columns: 2── Column specification ───────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+dbl  (1): KielerWoche
+date (1): Datum
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2V0dGVyPC0gcmVhZF9jc3YoXCJ3ZXR0ZXIuY3N2XCIpXG5gYGAifQ== -->
+<pre class="r"><code>wetter&lt;- read_csv(&quot;wetter.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMjYwMSBDb2x1bW5zOiA14pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuZGJsICAoNCk6IEJld29lbGt1bmcsIFRlbXBlcmF0dXIsIFdpbmRnZXNjaHdpbmRpZ2tlaXQsIFdldHRlcmNvZGVcbmRhdGUgKDEpOiBEYXR1bVxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
+<pre><code>Rows: 2601 Columns: 5── Column specification ───────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+dbl  (4): Bewoelkung, Temperatur, Windgeschwindigkeit, Wettercode
+date (1): Datum
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfaG9saWRheXMgPC0gcmVhZC5jc3YoXCJGZXJpZW5fRmVpZXJ0YWdlX3NoLmNzdlwiLCBoZWFkZXI9VFJVRSwgc2VwID0gXCI7XCIpXG5cbmBgYCJ9 -->
+<pre class="r"><code>df_holidays &lt;- read.csv(&quot;Ferien_Feiertage_sh.csv&quot;, header=TRUE, sep = &quot;;&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Anmerkung: Im Folgenden schmeiße ich die Warengruppe einmal raus,
+damit man das Datum als “uniquen” Value hat… Eventuell sollten wir
+nochmal überlegen, ob man die Warengruppe nicht doch irgendwie verwenden
+kann:)</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG51bXNhdHpkYXRlbl9nZWt1ZXJ6dCA8LSB1bXNhdHpkYXRlbl9nZWt1ZXJ6dCAlPiUgXG4gIGdyb3VwX2J5KERhdHVtKSAlPiUgXG4gIHN1bW1hcmlzZSh1bXNhdHogPSBzdW0oVW1zYXR6KSlcblxuI2NoZWNrIG9iIERhdHVtIHVuaXF1ZSBXZXJ0IGlzdFxubnJvdyh1bXNhdHpkYXRlbl9nZWt1ZXJ6dCk9PWxlbmd0aCh1bmlxdWUodW1zYXR6ZGF0ZW5fZ2VrdWVyenQkRGF0dW0pKVxuYGBgIn0= -->
+<pre class="r"><code>
+umsatzdaten_gekuerzt &lt;- umsatzdaten_gekuerzt %&gt;% 
+  group_by(Datum) %&gt;% 
+  summarise(umsatz = sum(Umsatz))
+
+#check ob Datum unique Wert ist
+nrow(umsatzdaten_gekuerzt)==length(unique(umsatzdaten_gekuerzt$Datum))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>DAmit kann man sehen, welche Klassen ein Df besitzt (zB Date)
+str(lapply(df, class))</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfdW1zYXR6X3VuZF93ZXR0ZXIgPC0gbWVyZ2UodW1zYXR6ZGF0ZW5fZ2VrdWVyenQsd2V0dGVyLCBieS54PVwiRGF0dW1cIiwgYnkueT1cIkRhdHVtXCIsIHNlcD1cIixcIiwgYWxsID0gRkFMU0UpIFxuXG4jY2hlY2ssIG9iIGltIG5ldWVuIERhdGVuc2F0eiBXZXR0ZXIgbnVuIHVuaXF1ZSBpc3Rcbm5yb3coZGZfdW1zYXR6X3VuZF93ZXR0ZXIpPT1sZW5ndGgodW5pcXVlKGRmX3Vtc2F0el91bmRfd2V0dGVyJERhdHVtKSlcbmBgYCJ9 -->
+<pre class="r"><code>df_umsatz_und_wetter &lt;- merge(umsatzdaten_gekuerzt,wetter, by.x=&quot;Datum&quot;, by.y=&quot;Datum&quot;, sep=&quot;,&quot;, all = FALSE) 
+
+#check, ob im neuen Datensatz Wetter nun unique ist
+nrow(df_umsatz_und_wetter)==length(unique(df_umsatz_und_wetter$Datum))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVmlldyhkZl91bXNhdHpfdW5kX3dldHRlcilcblxuYGBgIn0= -->
+<pre class="r"><code>View(df_umsatz_und_wetter)
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI21vZGVsbCB0cmFpbmllcmVuXG5cbiNtaXQgZWluZW0gUGFyYW1ldGVyXG5tb2QgPC0gbG0oVW1zYXR6IH4gQmV3b2Vsa3VuZywgdGFibGVfVVdLKVxuc3VtbWFyeShtb2QpXG5gYGAifQ== -->
-<pre class="r"><code>#modell trainieren
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jZGZfYWxsIDwtIG1lcmdlKGRmX3Vtc2F0el91bmRfd2V0dGVyLCBraXdvLCBieS54PVwiRGF0dW1cIiwgYnkueT1cIkRhdHVtXCIsIGFsbD1UUlVFKVxuZGZfYWxsIDwtIG1lcmdlKGRmX3Vtc2F0el91bmRfd2V0dGVyLCBraXdvLCBieS54PVwiRGF0dW1cIiwgYnkueT1cIkRhdHVtXCIsIGFsbCA9IFRSVUUpXG4jV2FyZW5ncnVwcGVuc3BhbHRlIGzDtnNjaGVuOyBkYSBmYWxzY2hlIFdlcnRlIGRyaW5cblxubnJvdyhkZl9hbGwpPT1sZW5ndGgodW5pcXVlKGRmX2FsbCREYXR1bSkpXG5gYGAifQ== -->
+<pre class="r"><code>
+#df_all &lt;- merge(df_umsatz_und_wetter, kiwo, by.x=&quot;Datum&quot;, by.y=&quot;Datum&quot;, all=TRUE)
+df_all &lt;- merge(df_umsatz_und_wetter, kiwo, by.x=&quot;Datum&quot;, by.y=&quot;Datum&quot;, all = TRUE)
+#Warengruppenspalte löschen; da falsche Werte drin
 
-#mit einem Parameter
-mod &lt;- lm(Umsatz ~ Bewoelkung, table_UWK)
-summary(mod)</code></pre>
+nrow(df_all)==length(unique(df_all$Datum))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxubG0oZm9ybXVsYSA9IFVtc2F0eiB+IEJld29lbGt1bmcsIGRhdGEgPSB0YWJsZV9VV0spXG5cblJlc2lkdWFsczpcbiAgICBNaW4gICAgICAxUSAgTWVkaWFuICAgICAgM1EgICAgIE1heCBcbi00OTguMTMgLTIwNS4wMiAgLTU1LjQxICAxNTcuNzYgMjE2MC43NSBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgIDExNTYuNTQgICAgICAxMi40NiAgOTIuNzg1ICAgPDJlLTE2ICoqKlxuQmV3b2Vsa3VuZyAgICAtMjAuMTEgICAgICAgMi4zMSAgLTguNzA3ICAgPDJlLTE2ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cblJlc2lkdWFsIHN0YW5kYXJkIGVycm9yOiAyODAuOSBvbiAyMDk2IGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoMzYgQmVvYmFjaHR1bmdlbiBhbHMgZmVobGVuZCBnZWzDtnNjaHQpXG5NdWx0aXBsZSBSLXNxdWFyZWQ6ICAwLjAzNDksXHRBZGp1c3RlZCBSLXNxdWFyZWQ6ICAwLjAzNDQ0IFxuRi1zdGF0aXN0aWM6ICA3NS44IG9uIDEgYW5kIDIwOTYgREYsICBwLXZhbHVlOiA8IDIuMmUtMTZcbiJ9 -->
-<pre><code>
-Call:
-lm(formula = Umsatz ~ Bewoelkung, data = table_UWK)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--498.13 -205.02  -55.41  157.76 2160.75 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  1156.54      12.46  92.785   &lt;2e-16 ***
-Bewoelkung    -20.11       2.31  -8.707   &lt;2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 280.9 on 2096 degrees of freedom
-  (36 Beobachtungen als fehlend gelöscht)
-Multiple R-squared:  0.0349,    Adjusted R-squared:  0.03444 
-F-statistic:  75.8 on 1 and 2096 DF,  p-value: &lt; 2.2e-16</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI21pdCAyIFBhcmFtZXRlclxubW9kX3R3byA8LSBsbShVbXNhdHogfiBCZXdvZWxrdW5nK1RlbXBlcmF0dXIsIGRmX2FsbGVzKVxuc3VtbWFyeShtb2RfdHdvKVxuYGBgIn0= -->
-<pre class="r"><code>#mit 2 Parameter
-mod_two &lt;- lm(Umsatz ~ Bewoelkung+Temperatur, df_alles)
-summary(mod_two)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2luIGRlciBraXdvIFNwYWx0ZSBhbGxlIG5hbiB3ZXJ0ZSBkdXJjaCAwIGVyc2V0emVuXG5kZl9hbGwkS2llbGVyV29jaGVbaXMubmEoZGZfYWxsJEtpZWxlcldvY2hlKV0gPC0gMFxuXG5cblxuZGZfaG9saWRheXMgPC0gbXV0YXRlKGRmX2hvbGlkYXlzLCBEYXR1bSA9IGFzLkRhdGUoRGF0dW0sIGZvcm1hdD0gXCIlWS0lbS0lZFwiKSlcblxuXG4jVmlldyhkZl9hbGwpXG5WaWV3KGRmX2hvbGlkYXlzKVxuc3RyKGxhcHBseShkZl9ob2xpZGF5cywgY2xhc3MpKVxuYGBgIn0= -->
+<pre class="r"><code>#in der kiwo Spalte alle nan werte durch 0 ersetzen
+df_all$KielerWoche[is.na(df_all$KielerWoche)] &lt;- 0
+
+
+
+df_holidays &lt;- mutate(df_holidays, Datum = as.Date(Datum, format= &quot;%Y-%m-%d&quot;))
+
+
+#View(df_all)
+View(df_holidays)
+str(lapply(df_holidays, class))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxubG0oZm9ybXVsYSA9IFVtc2F0eiB+IEJld29lbGt1bmcgKyBUZW1wZXJhdHVyLCBkYXRhID0gZGZfYWxsZXMpXG5cblJlc2lkdWFsczpcbiAgICBNaW4gICAgICAxUSAgTWVkaWFuICAgICAgM1EgICAgIE1heCBcbi01ODEuMDggLTE2OS42MSAgLTQxLjU5ICAxMjUuMzggMjE0MS4zOSBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB0IHZhbHVlIFByKD58dHwpICAgIFxuKEludGVyY2VwdCkgODQwLjMwNDkgICAgMTcuOTM1OSAgNDYuODUxICAgPDJlLTE2ICoqKlxuQmV3b2Vsa3VuZyAgIC0wLjU5NTEgICAgIDIuMjQ1OCAgLTAuMjY1ICAgIDAuNzkxICAgIFxuVGVtcGVyYXR1ciAgIDE4LjY5MjAgICAgIDAuODI4OCAgMjIuNTUzICAgPDJlLTE2ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cblJlc2lkdWFsIHN0YW5kYXJkIGVycm9yOiAyNTIgb24gMjA5NSBkZWdyZWVzIG9mIGZyZWVkb21cbiAgKDM2IEJlb2JhY2h0dW5nZW4gYWxzIGZlaGxlbmQgZ2Vsw7ZzY2h0KVxuTXVsdGlwbGUgUi1zcXVhcmVkOiAgMC4yMjM0LFx0QWRqdXN0ZWQgUi1zcXVhcmVkOiAgMC4yMjI3IFxuRi1zdGF0aXN0aWM6IDMwMS40IG9uIDIgYW5kIDIwOTUgREYsICBwLXZhbHVlOiA8IDIuMmUtMTZcbiJ9 -->
-<pre><code>
-Call:
-lm(formula = Umsatz ~ Bewoelkung + Temperatur, data = df_alles)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--581.08 -169.61  -41.59  125.38 2141.39 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 840.3049    17.9359  46.851   &lt;2e-16 ***
-Bewoelkung   -0.5951     2.2458  -0.265    0.791    
-Temperatur   18.6920     0.8288  22.553   &lt;2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 252 on 2095 degrees of freedom
-  (36 Beobachtungen als fehlend gelöscht)
-Multiple R-squared:  0.2234,    Adjusted R-squared:  0.2227 
-F-statistic: 301.4 on 2 and 2095 DF,  p-value: &lt; 2.2e-16</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiTGlzdCBvZiAzXG4gJCBEYXR1bSAgICAgIDogY2hyIFwiRGF0ZVwiXG4gJCBGZWllcnRhZ2UgIDogY2hyIFwiaW50ZWdlclwiXG4gJCBTY2h1bGZlcmllbjogY2hyIFwiaW50ZWdlclwiXG4ifQ== -->
+<pre><code>List of 3
+ $ Datum      : chr &quot;Date&quot;
+ $ Feiertage  : chr &quot;integer&quot;
+ $ Schulferien: chr &quot;integer&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKGxhcHBseShkZl9hbGwsIGNsYXNzKSlcbmBgYCJ9 -->
+<pre class="r"><code>str(lapply(df_all, class))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGlzdCBvZiA3XG4gJCBEYXR1bSAgICAgICAgICAgICAgOiBjaHIgXCJEYXRlXCJcbiAkIHVtc2F0eiAgICAgICAgICAgICA6IGNociBcIm51bWVyaWNcIlxuICQgQmV3b2Vsa3VuZyAgICAgICAgIDogY2hyIFwibnVtZXJpY1wiXG4gJCBUZW1wZXJhdHVyICAgICAgICAgOiBjaHIgXCJudW1lcmljXCJcbiAkIFdpbmRnZXNjaHdpbmRpZ2tlaXQ6IGNociBcIm51bWVyaWNcIlxuICQgV2V0dGVyY29kZSAgICAgICAgIDogY2hyIFwibnVtZXJpY1wiXG4gJCBLaWVsZXJXb2NoZSAgICAgICAgOiBjaHIgXCJudW1lcmljXCJcbiJ9 -->
+<pre><code>List of 7
+ $ Datum              : chr &quot;Date&quot;
+ $ umsatz             : chr &quot;numeric&quot;
+ $ Bewoelkung         : chr &quot;numeric&quot;
+ $ Temperatur         : chr &quot;numeric&quot;
+ $ Windgeschwindigkeit: chr &quot;numeric&quot;
+ $ Wettercode         : chr &quot;numeric&quot;
+ $ KielerWoche        : chr &quot;numeric&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0ZlcmllbiB1bmQgRmVpZXJ0YWdlIGFuaMOkbmdlblxuXG5kZl9hbGwgPC0gbWVyZ2UoZGZfYWxsLCBkZl9ob2xpZGF5cywgYnkueD1cIkRhdHVtXCIsIGJ5Lnk9XCJEYXR1bVwiKVxuXG5WaWV3KGRmX2FsbClcbm5yb3coZGZfYWxsKT09bGVuZ3RoKHVuaXF1ZShkZl9hbGwkRGF0dW0pKVxuYGBgIn0= -->
+<pre class="r"><code>#Ferien und Feiertage anhängen
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkdydXBwZSA2IE5vdGVib29rOikiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KVG8gRG8nczoNCi0gU3BhbHRlIFdhcmVuZ3J1cHBlIHdpZWRlciBlaW5mw7xnZW4tPiB3aWUgZsO8Z3QgbWFuIHVudGVyc2NoaWVkbGljaCBsYW5nZSBkZiB6c20/DQotIEhlYXRtYXAgZXJzdGVsbGVuDQotIGxpbmVhcmVzIE1vZGVsbCBtaXQgdW50ZXJzY2hpZWRsaWNoZW4gUGFyYW1ldGVybiBhdWZmw7xsbGVuDQotIGxpbmVhcmVzIE1vZGVsbDogd2FzIGthbm4gbWFuIGdlbmVyZWxsIHZlcsOkbmRlcm4NCi0gRXJnZWJuaXNzZSBkZXMgTW9kZWxscyBwbG90dGVuDQotIFdpZSBpbnRlcnByZXRpZXJ0IG1hbiBkaWUgV2VydGUgZGVzIE1vZGVsbHMNCi0gd2llIHNoZWx2ZWQgbWFuIGhpZXIgQ2hhbmdlcz8NCi0gd2llIENvZGUgw4RuZGVydW5nZW4gc2VoZW4/DQoNCkJhc2ljczoNCg0KJCA6IEF1ZiBlaW56ZWxuZSBTcGFsdGVuIHp1Z3JlaWZlbiB1bmQgZGllc2UgYWxzIFZla3RvciBhdXNsZXNlbg0KICAgIEJzcDogd2V0dGVyJERhdHVtDQogICAgLSBkYW1pdCBrw7ZubmVuIGF1Y2ggbmV1ZSBTcGFsdGVuIGhpbnp1Z2Vmw7xndCB3ZXJkZW4NCmBgYHtyfQ0KI2xpYnJhcmllcyBpbXBvcnRpZXJlbg0KbGlicmFyeShyZWFkcikNCmBgYA0KDQoNCmBgYHtyfQ0KI1dhcmVuZ3J1cHBlIGFuIFRhYmVsbGUgYW5ow6RuZ2VuDQoNCmRmX2FsbGVzIDwtIHRhYmxlX1VXSw0KDQojWmVpbGVuIGFuZ2ViZW4gbGFzc2VuDQpucm93KGRmX2FsbGVzKQ0KbnJvdyh1bXNhdHpkYXRlbl9nZWt1ZXJ6dCkNCm5yb3codGFibGVfVVdLKQ0KDQpWaWV3KGRmX2FsbGVzKQ0KDQpgYGANCg0KYGBge3J9DQojbW9kZWxsIHRyYWluaWVyZW4NCg0KI21pdCBlaW5lbSBQYXJhbWV0ZXINCm1vZCA8LSBsbShVbXNhdHogfiBCZXdvZWxrdW5nLCB0YWJsZV9VV0spDQpzdW1tYXJ5KG1vZCkNCg0KI21pdCAyIFBhcmFtZXRlcg0KIyNQbHVzLT56d2VpdGUgdW5hYmjDpG5naWdlIFByw6RkaWt0b3J2YXJpYWJsZSBpc3QgaGllciBUZW1wZXJhdHVyDQptb2RfdHdvIDwtIGxtKFVtc2F0eiB+IEJld29lbGt1bmcrVGVtcGVyYXR1ciwgZGZfYWxsZXMpDQpzdW1tYXJ5KG1vZF90d28pDQoNCmBgYA0KDQoNCg==</div>
+df_all &lt;- merge(df_all, df_holidays, by.x=&quot;Datum&quot;, by.y=&quot;Datum&quot;)
+
+View(df_all)
+nrow(df_all)==length(unique(df_all$Datum))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>#Warengruppe an Tabelle anhängen Notiz:In unserer UWK Tabelle hatte
+die Spalte Warengruppe gefehlt. Da ich alle df neu erstellt habe, ist
+das jetzt egal, aber hier sieht man wie man eine einzelne Spalte einem
+df anhängen könnte:)</p>
+<p>df_alles &lt;- table_UWK #neues df aus umsatzdaten_gekuerzt erstellen
+und alle übrigen Spalten droppen außer Warengruppe df_warengruppe &lt;-
+subset(umsatzdaten_gekuerzt, select = -c(Umsatz))</p>
+<p>#beiden dataframes mergen # all = true sorgt dafür, dass wenn keine
+Werte vorhanden sind, einfach NA`s eingetragen werden df_alles &lt;-
+merge(df_alles,df_warengruppe, by.x=“Datum”,by.y=“Datum”, all =
+TRUE)</p>
+<p>#modell trainieren</p>
+<p>#mit einem Parameter mod &lt;- lm(Umsatz ~ Bewoelkung, table_UWK)
+summary(mod)</p>
+<p>#mit 2 Parameter ##Plus-&gt;zweite unabhängige Prädiktorvariable ist
+hier Temperatur mod_two &lt;- lm(Umsatz ~ Bewoelkung+Temperatur,
+df_alles) summary(mod_two)</p>
+<div id="parameter" class="section level2">
+<h2>3 Parameter</h2>
+<pre><code>
+#heatmap
+#irgendwas plotten:D
+#NA&#39;s müssen bereinigt werden! für ordentlichen Plot #wie ist es mit dublizierten Werten?
+df_complete &lt;- df_alles[complete.cases(df_alles), ]
+
+ggplot(df_complete, aes(Umsatz, Warengruppe),oob=squish)+geom_tile()
+</code></pre>
+<!-- rnb-text-end -->
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkdydXBwZSA2IE5vdGVib29rOikiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KVG8gRG8nczoNCi0gU3BhbHRlIFdhcmVuZ3J1cHBlIHdpZWRlciBlaW5mw7xnZW4tPiB3aWUgZsO8Z3QgbWFuIHVudGVyc2NoaWVkbGljaCBsYW5nZSBkZiB6c20/ICsNCi0gSGVhdG1hcCBlcnN0ZWxsZW4/IFdlbGNoZXIgR3JhcGggaXN0IHNpbm52b2xsDQotIGxpbmVhcmVzIE1vZGVsbCBtaXQgdW50ZXJzY2hpZWRsaWNoZW4gUGFyYW1ldGVybiBhdWZmw7xsbGVuDQotIGxpbmVhcmVzIE1vZGVsbDogd2FzIGthbm4gbWFuIGdlbmVyZWxsIHZlcsOkbmRlcm4NCi0gRXJnZWJuaXNzZSBkZXMgTW9kZWxscyBwbG90dGVuDQotIFdpZSBpbnRlcnByZXRpZXJ0IG1hbiBkaWUgV2VydGUgZGVzIE1vZGVsbHMNCi0gd2llIHNoZWx2ZWQgbWFuIGhpZXIgQ2hhbmdlcz8gLT5jbWQ/DQoNCg0KDQoNCkJhc2ljczoNCg0KJCA6IEF1ZiBlaW56ZWxuZSBTcGFsdGVuIHp1Z3JlaWZlbiB1bmQgZGllc2UgYWxzIFZla3RvciBhdXNsZXNlbg0KICAgIEJzcDogd2V0dGVyJERhdHVtDQogICAgLSBkYW1pdCBrw7ZubmVuIGF1Y2ggbmV1ZSBTcGFsdGVuIGhpbnp1Z2Vmw7xndCB3ZXJkZW4NCm5yb3c6IHplaWd0IEFuemFobCBkZXIgU3BhbHRlbiBpbiBlaW5lbSBkZiBhbg0KDQpgYGB7cn0NCmBgYA0KDQoNCmBgYHtyfQ0KI2xpYnJhcmllcyBpbXBvcnRpZXJlbg0KbGlicmFyeShyZWFkcikNCmxpYnJhcnkoZ2dwbG90MikNCmxpYnJhcnkoZHBseXIpDQpsaWJyYXJ5KGx1YnJpZGF0ZSkNCmBgYA0KDQoNCg0KYGBge3J9DQojY3N2cyBFaW5sZXNlbg0KdW1zYXR6ZGF0ZW5fZ2VrdWVyenQgPC0gcmVhZF9jc3YoInVtc2F0emRhdGVuX2dla3Vlcnp0LmNzdiIpDQpraXdvIDwtIHJlYWRfY3N2KCJraXdvLmNzdiIpDQp3ZXR0ZXI8LSByZWFkX2Nzdigid2V0dGVyLmNzdiIpDQpkZl9ob2xpZGF5cyA8LSByZWFkLmNzdigiRmVyaWVuX0ZlaWVydGFnZV9zaC5jc3YiLCBoZWFkZXI9VFJVRSwgc2VwID0gIjsiKQ0KDQpgYGANCkFubWVya3VuZzoNCkltIEZvbGdlbmRlbiBzY2htZWnDn2UgaWNoIGRpZSBXYXJlbmdydXBwZSBlaW5tYWwgcmF1cywgZGFtaXQgbWFuIGRhcyBEYXR1bSBhbHMgInVuaXF1ZW4iIFZhbHVlIGhhdC4uLg0KRXZlbnR1ZWxsIHNvbGx0ZW4gd2lyIG5vY2htYWwgw7xiZXJsZWdlbiwgb2IgbWFuIGRpZSBXYXJlbmdydXBwZSBuaWNodCBkb2NoIGlyZ2VuZHdpZSB2ZXJ3ZW5kZW4ga2FubjopDQoNCmBgYHtyfQ0KDQp1bXNhdHpkYXRlbl9nZWt1ZXJ6dCA8LSB1bXNhdHpkYXRlbl9nZWt1ZXJ6dCAlPiUgDQogIGdyb3VwX2J5KERhdHVtKSAlPiUgDQogIHN1bW1hcmlzZSh1bXNhdHogPSBzdW0oVW1zYXR6KSkNCg0KI2NoZWNrIG9iIERhdHVtIHVuaXF1ZSBXZXJ0IGlzdA0KbnJvdyh1bXNhdHpkYXRlbl9nZWt1ZXJ6dCk9PWxlbmd0aCh1bmlxdWUodW1zYXR6ZGF0ZW5fZ2VrdWVyenQkRGF0dW0pKQ0KYGBgDQpEQW1pdCBrYW5uIG1hbiBzZWhlbiwgd2VsY2hlIEtsYXNzZW4gZWluIERmIGJlc2l0enQgKHpCIERhdGUpDQpzdHIobGFwcGx5KGRmLCBjbGFzcykpDQoNCmBgYHtyfQ0KZGZfdW1zYXR6X3VuZF93ZXR0ZXIgPC0gbWVyZ2UodW1zYXR6ZGF0ZW5fZ2VrdWVyenQsd2V0dGVyLCBieS54PSJEYXR1bSIsIGJ5Lnk9IkRhdHVtIiwgc2VwPSIsIiwgYWxsID0gRkFMU0UpIA0KDQojY2hlY2ssIG9iIGltIG5ldWVuIERhdGVuc2F0eiBXZXR0ZXIgbnVuIHVuaXF1ZSBpc3QNCm5yb3coZGZfdW1zYXR6X3VuZF93ZXR0ZXIpPT1sZW5ndGgodW5pcXVlKGRmX3Vtc2F0el91bmRfd2V0dGVyJERhdHVtKSkNClZpZXcoZGZfdW1zYXR6X3VuZF93ZXR0ZXIpDQoNCmBgYA0KDQpgYGB7cn0NCg0KI2RmX2FsbCA8LSBtZXJnZShkZl91bXNhdHpfdW5kX3dldHRlciwga2l3bywgYnkueD0iRGF0dW0iLCBieS55PSJEYXR1bSIsIGFsbD1UUlVFKQ0KZGZfYWxsIDwtIG1lcmdlKGRmX3Vtc2F0el91bmRfd2V0dGVyLCBraXdvLCBieS54PSJEYXR1bSIsIGJ5Lnk9IkRhdHVtIiwgYWxsID0gVFJVRSkNCiNXYXJlbmdydXBwZW5zcGFsdGUgbMO2c2NoZW47IGRhIGZhbHNjaGUgV2VydGUgZHJpbg0KDQpucm93KGRmX2FsbCk9PWxlbmd0aCh1bmlxdWUoZGZfYWxsJERhdHVtKSkNCg0KI2luIGRlciBraXdvIFNwYWx0ZSBhbGxlIG5hbiB3ZXJ0ZSBkdXJjaCAwIGVyc2V0emVuDQpkZl9hbGwkS2llbGVyV29jaGVbaXMubmEoZGZfYWxsJEtpZWxlcldvY2hlKV0gPC0gMA0KDQoNCg0KZGZfaG9saWRheXMgPC0gbXV0YXRlKGRmX2hvbGlkYXlzLCBEYXR1bSA9IGFzLkRhdGUoRGF0dW0sIGZvcm1hdD0gIiVZLSVtLSVkIikpDQoNCg0KI1ZpZXcoZGZfYWxsKQ0KVmlldyhkZl9ob2xpZGF5cykNCnN0cihsYXBwbHkoZGZfaG9saWRheXMsIGNsYXNzKSkNCnN0cihsYXBwbHkoZGZfYWxsLCBjbGFzcykpDQoNCg0KYGBgDQoNCg0KYGBge3J9DQojRmVyaWVuIHVuZCBGZWllcnRhZ2UgYW5ow6RuZ2VuDQoNCmRmX2FsbCA8LSBtZXJnZShkZl9hbGwsIGRmX2hvbGlkYXlzLCBieS54PSJEYXR1bSIsIGJ5Lnk9IkRhdHVtIikNCg0KVmlldyhkZl9hbGwpDQpucm93KGRmX2FsbCk9PWxlbmd0aCh1bmlxdWUoZGZfYWxsJERhdHVtKSkNCg0KYGBgDQoNCiNXYXJlbmdydXBwZSBhbiBUYWJlbGxlIGFuaMOkbmdlbg0KTm90aXo6SW4gdW5zZXJlciBVV0sgVGFiZWxsZSBoYXR0ZSBkaWUgU3BhbHRlIFdhcmVuZ3J1cHBlIGdlZmVobHQuIERhIGljaCBhbGxlIGRmIG5ldSBlcnN0ZWxsdCBoYWJlLCBpc3QgZGFzIGpldHp0IGVnYWwsIGFiZXIgaGllciBzaWVodCBtYW4gd2llIG1hbiBlaW5lIGVpbnplbG5lIFNwYWx0ZSBlaW5lbSBkZiBhbmjDpG5nZW4ga8O2bm50ZTopDQoNCmRmX2FsbGVzIDwtIHRhYmxlX1VXSw0KI25ldWVzIGRmIGF1cyAgdW1zYXR6ZGF0ZW5fZ2VrdWVyenQgZXJzdGVsbGVuIHVuZCBhbGxlIMO8YnJpZ2VuIFNwYWx0ZW4gZHJvcHBlbiBhdcOfZXIgV2FyZW5ncnVwcGUNCmRmX3dhcmVuZ3J1cHBlIDwtIHN1YnNldCh1bXNhdHpkYXRlbl9nZWt1ZXJ6dCwgc2VsZWN0ID0gLWMoVW1zYXR6KSkNCg0KI2JlaWRlbiBkYXRhZnJhbWVzIG1lcmdlbg0KIyBhbGwgPSB0cnVlIHNvcmd0IGRhZsO8ciwgZGFzcyB3ZW5uIGtlaW5lIFdlcnRlIHZvcmhhbmRlbiBzaW5kLCBlaW5mYWNoIE5BYHMgZWluZ2V0cmFnZW4gd2VyZGVuDQpkZl9hbGxlcyA8LSBtZXJnZShkZl9hbGxlcyxkZl93YXJlbmdydXBwZSwgYnkueD0iRGF0dW0iLGJ5Lnk9IkRhdHVtIiwgYWxsID0gVFJVRSkNCg0KDQojbW9kZWxsIHRyYWluaWVyZW4NCg0KI21pdCBlaW5lbSBQYXJhbWV0ZXINCm1vZCA8LSBsbShVbXNhdHogfiBCZXdvZWxrdW5nLCB0YWJsZV9VV0spDQpzdW1tYXJ5KG1vZCkNCg0KI21pdCAyIFBhcmFtZXRlcg0KIyNQbHVzLT56d2VpdGUgdW5hYmjDpG5naWdlIFByw6RkaWt0b3J2YXJpYWJsZSBpc3QgaGllciBUZW1wZXJhdHVyDQptb2RfdHdvIDwtIGxtKFVtc2F0eiB+IEJld29lbGt1bmcrVGVtcGVyYXR1ciwgZGZfYWxsZXMpDQpzdW1tYXJ5KG1vZF90d28pDQoNCiMjIDMgUGFyYW1ldGVyDQoNCmBgYA0KDQojaGVhdG1hcA0KI2lyZ2VuZHdhcyBwbG90dGVuOkQNCiNOQSdzIG3DvHNzZW4gYmVyZWluaWd0IHdlcmRlbiEgZsO8ciBvcmRlbnRsaWNoZW4gUGxvdCAjd2llIGlzdCBlcyBtaXQgZHVibGl6aWVydGVuIFdlcnRlbj8NCmRmX2NvbXBsZXRlIDwtIGRmX2FsbGVzW2NvbXBsZXRlLmNhc2VzKGRmX2FsbGVzKSwgXQ0KDQpnZ3Bsb3QoZGZfY29tcGxldGUsIGFlcyhVbXNhdHosIFdhcmVuZ3J1cHBlKSxvb2I9c3F1aXNoKStnZW9tX3RpbGUoKQ0KDQpgYGANCg0K</div>
 
 
 
