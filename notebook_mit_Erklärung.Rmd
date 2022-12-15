@@ -10,7 +10,8 @@ To Do's:
 - Ergebnisse des Modells plotten
 - Wie interpretiert man die Werte des Modells
 - wie shelved man hier Changes? ->cmd?
-
+- Wettercodes zusammenfassen-> weniger Detaillierung
+- Datum könnte man herunterbrechen auf Monate -> weniger Detaillierung
 
 
 
@@ -55,6 +56,7 @@ umsatzdaten_gekuerzt <- umsatzdaten_gekuerzt %>%
 
 #check ob Datum unique Wert ist
 nrow(umsatzdaten_gekuerzt)==length(unique(umsatzdaten_gekuerzt$Datum))
+
 ```
 DAmit kann man sehen, welche Klassen ein Df besitzt (zB Date)
 str(lapply(df, class))
@@ -79,16 +81,7 @@ nrow(df_all)==length(unique(df_all$Datum))
 #in der kiwo Spalte alle nan werte durch 0 ersetzen
 df_all$KielerWoche[is.na(df_all$KielerWoche)] <- 0
 
-
-
 df_holidays <- mutate(df_holidays, Datum = as.Date(Datum, format= "%Y-%m-%d"))
-
-
-#View(df_all)
-View(df_holidays)
-str(lapply(df_holidays, class))
-str(lapply(df_all, class))
-
 
 ```
 
@@ -138,4 +131,29 @@ df_complete <- df_alles[complete.cases(df_alles), ]
 ggplot(df_complete, aes(Umsatz, Warengruppe),oob=squish)+geom_tile()
 
 ```
+```{r}
+#Konfidenzintervall berechnen für Umsatz je nach Feiertag
+#wieso sind es nur 22:,)
+print(sum(df_all$Feiertage))
 
+
+
+my_konf <- df_all%>%
+  group_by(Feiertage)%>%
+  summarise(
+    n=n(),
+    mean=mean(umsatz),  
+    sd=sd(umsatz)
+  )%>%
+  mutate(se=sd/sqrt(n)) %>%
+  mutate(ic= se * qt((1-0.5)/2+.5,n-1))
+
+#my_konf <- my_konf[-1,]
+
+ggplot(my_konf)+
+  geom_bar(aes(x=Feiertage, y=mean), stat= "identity", fill="blue", alpha=0.1)+
+  geom_errorbar(aes(x=Feiertage, ymin=mean-ic, ymax=mean+ic), width=0.5, colour = "orange", alpha=0.9, size=1.5)
+
+
+
+```
