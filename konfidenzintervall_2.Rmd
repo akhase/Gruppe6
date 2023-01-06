@@ -1,0 +1,71 @@
+---
+title: "Konfidenzintervall 2.0"
+output: html_notebook
+---
+Fahrplan
+
+- Datensätze zusammenfügen
+- Umsatz je Warengruppe voraussagen, wenn (kein) Feiertag
+
+? wieso hat df_all 150 Zeilen mehr? Feiertage die nicht als Datum erhalten waren?
+
+```{r}
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+install.packages("data.table")
+
+```
+Einlesen der Datensätze
+```{r}
+#weil mein RStudio dumm ist und sonst nicht weiß wo es die Daten findet und wo es arbeiten soll:))
+setwd("C:/Users/lockf/OneDrive/Desktop/Gruppe6")
+umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
+kiwo <- read_csv("kiwo.csv")
+wetter <- read_csv("wetter.csv")
+ferien <- read.csv("C:/Users/lockf/OneDrive/Dokumente/Ferien_Feiertage_sh.csv", header = TRUE, sep = ";")
+#damit Datumsspalte richtige Formatierung hat und man später ordentlich mergen kann
+ferien$Datum <- as.Date(ferien$Datum, format = "%Y-%m-%d")
+
+
+```
+Zusammenfügen der Datensätze
+-> outer join? einfach alles aneinander kleben
+-> bei Wetter vllt nicht so sinnvoll
+
+```{r}
+umsatzdaten_kiwo <-merge(x = umsatzdaten, y = kiwo, all = TRUE)
+#ersetzen aller NA Werte durch 0 in der Spalte KielerWoche
+umsatzdaten_kiwo <- mutate_at(umsatzdaten_kiwo,c("KielerWoche"), ~replace(., is.na(.), 0))
+
+umsatzdaten_kiwo_wetter <- merge(x = umsatzdaten_kiwo, y = wetter, all = TRUE)
+#View(umsatzdaten_kiwo_wetter)
+
+df_all <- merge(x= umsatzdaten_kiwo_wetter, y = ferien, all = TRUE)
+
+df_all <- as.data.frame.table(df_all)
+
+ggplot(subset(df_all, Freq.Warengruppe %in% c("1")), aes(x = Freq.Schulferien, y = Freq.Umsatz, fill=Freq.Warengruppe) )+
+  geom_bar(stat = "identity")
+
+# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
+my_konf <- df_all %>%
+  group_by(Freq.Warengruppe) %>%
+  summarise(
+    n=n(),
+    mean=mean(Freq.Umsatz),
+    sd=sd(Freq.Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+
+View(my_konf_eins)
+# Confidence Interval
+ggplot(my_konf) +
+  geom_bar( aes(x=Freq.Warengruppe, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Freq.Warengruppe, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
+
+```
