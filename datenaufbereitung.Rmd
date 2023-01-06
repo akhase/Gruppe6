@@ -1,0 +1,71 @@
+---
+title: "Datenaufbereitung"
+output: html_notebook
+---
+
+
+```{r}
+library(readr)
+library(VIM)
+library(dplyr)
+library(tidyr)
+
+#df_all <- VIM::df_all
+
+# Zeilen löschen an denen Warengruppe und Umsatz NA ist
+df_all_short <- df_all[complete.cases(df_all$Warengruppe),]
+
+sum(is.na(df_all_short$Warengruppe))
+sum(is.na(df_hotdeck1$Umsatz))
+sum(is.na(df_hotdeck1$Schulferien))
+sum(is.na(df_hotdeck1$Ferientag))
+
+#
+df_all_short %>% aggr(combined=TRUE, numbers=TRUE, plot = TRUE)
+
+# löschen der Zeilen, wenn NA vorkommt
+df_all_deletion <- na.omit(df_all)
+df_all_deletion %>% aggr(combined=TRUE, numbers=TRUE)
+
+
+# VIM Hot-Deck Imputation
+#df_wettercode <- df_all[,c("Datum","Wettercode", "Temperatur", "Windgeschwindigkeit", "Bewoelkung")]
+
+df_hotdeck1 <- hotdeck(df_all_short, variable = "Wettercode", domain_var = c("Temperatur"), impNA = TRUE)
+df_hotdeck1 <- hotdeck(df_hotdeck1, variable = "Wettercode", domain_var = c("Windgeschwindigkeit"), impNA = TRUE)
+df_hotdeck1 <- hotdeck(df_hotdeck1, variable = "Wettercode", domain_var = c("Bewoelkung"), impNA = TRUE)
+df_hotdeck1 %>% aggr(combined=TRUE, numbers=TRUE)
+
+#check, ob alle NAs ersetzt worden sind
+sum(is.na(df_hotdeck1$Wettercode))
+
+View(df_hotdeck1)
+
+
+ggplot(df_hotdeck1) +
+  geom_point(aes(x=Sleep, y=Umsatz, color=Sleep_imp))
+
+
+
+
+df_hotdeck2 <- df_all %>%  hotdeck(ord_var = "Dream")
+df_hotdeck2 %>% aggr(combined=TRUE, numbers=TRUE)
+
+df_hotdeck3 <- df_hotdeck2 %>%  hotdeck(ord_var = "Sleep")
+df_hotdeck3 %>% aggr(combined=TRUE, numbers=TRUE)
+
+# VIM Iterative Robust Model Imputation (IRMI)
+df_irmi <- sleep %>%  irmi()
+ggplot(sleep_irmi) +
+  geom_point(aes(x=Sleep, y=Dream, color=Sleep_imp))
+
+
+# Impact
+cor(sleep_deletion$Sleep, sleep_deletion$Dream)
+cor(sleep_hotdeck1$Sleep, sleep_hotdeck1$Dream, use = "complete.obs")
+cor(sleep_hotdeck2$Sleep, sleep_hotdeck2$Dream, use = "complete.obs")
+cor(sleep_hotdeck3$Sleep, sleep_hotdeck3$Dream, use = "complete.obs")
+cor(sleep_irmi$Sleep, sleep_irmi$Dream)
+
+```
+
