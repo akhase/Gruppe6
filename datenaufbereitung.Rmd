@@ -15,10 +15,10 @@ library(tidyr)
 # Zeilen löschen an denen Warengruppe und Umsatz NA ist
 df_all_short <- df_all[complete.cases(df_all$Warengruppe),]
 
-sum(is.na(df_all_short$Warengruppe))
-sum(is.na(df_hotdeck1$Umsatz))
-sum(is.na(df_hotdeck1$Schulferien))
-sum(is.na(df_hotdeck1$Ferientag))
+#sum(is.na(df_all_short$Warengruppe))
+#sum(is.na(df_hotdeck1$Umsatz))
+#sum(is.na(df_hotdeck1$Schulferien))
+#sum(is.na(df_hotdeck1$Ferientag))
 
 #
 df_all_short %>% aggr(combined=TRUE, numbers=TRUE, plot = TRUE)
@@ -36,12 +36,23 @@ df_hotdeck1 <- hotdeck(df_hotdeck1, variable = "Wettercode", domain_var = c("Win
 df_hotdeck1 <- hotdeck(df_hotdeck1, variable = "Wettercode", domain_var = c("Bewoelkung"), impNA = TRUE)
 df_hotdeck1 %>% aggr(combined=TRUE, numbers=TRUE)
 
+df_hotdeck2 <- hotdeck(df_hotdeck1, variable = "Bewoelkung", domain_var = c("Wettercode"), impNA = TRUE)
+df_hotdeck2 %>% aggr(combined=TRUE, numbers=TRUE)
+
 #check, ob alle NAs ersetzt worden sind
-sum(is.na(df_hotdeck1$Wettercode))
+sum(is.na(df_hotdeck2$Bewoelkung))
 
-View(df_hotdeck1)
+#unnötige true false spalten löschen
+df_drop <- df_hotdeck1 %>% select(-(Wettercode_imp: Wettercode_imp.2))
+df_drop <- cbind(df_drop, df_hotdeck2$Bewoelkung)
+df_drop <- df_drop %>% select(-(Bewoelkung))
+names(df_drop)[10] <- "Bewoelkung_imp"
+names(df_drop)[7] <- "Wettercode_imp"
+View(df_drop)
+sum(is.na(df_drop$Bewoelkung))
 
 
+```
 ggplot(df_hotdeck1) +
   geom_point(aes(x=Sleep, y=Umsatz, color=Sleep_imp))
 
@@ -66,6 +77,8 @@ cor(sleep_hotdeck1$Sleep, sleep_hotdeck1$Dream, use = "complete.obs")
 cor(sleep_hotdeck2$Sleep, sleep_hotdeck2$Dream, use = "complete.obs")
 cor(sleep_hotdeck3$Sleep, sleep_hotdeck3$Dream, use = "complete.obs")
 cor(sleep_irmi$Sleep, sleep_irmi$Dream)
+
+
 
 ```
 

@@ -14,7 +14,7 @@ library(readr)
 library(lubridate)
 library(ggplot2)
 library(dplyr)
-install.packages("data.table")
+#install.packages("data.table")
 
 ```
 Einlesen der Datensätze
@@ -56,8 +56,8 @@ my_konf <- df_all %>%
   mutate( se=sd/sqrt(n))  %>%
   mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
 
-
-View(my_konf_eins)
+View(df_all)
+View(my_konf)
 # Confidence Interval
 ggplot(my_konf) +
   geom_bar( aes(x=Warengruppe, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
