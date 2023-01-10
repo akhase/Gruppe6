@@ -42,6 +42,9 @@ df_hotdeck2 %>% aggr(combined=TRUE, numbers=TRUE)
 #check, ob alle NAs ersetzt worden sind
 sum(is.na(df_hotdeck2$Bewoelkung))
 
+#ggplot(df_hotdeck1) +
+#  geom_point(aes(x=Warengruppe, y=Umsatz, color=Wettercode_imp))
+
 #unnötige true false spalten löschen
 df_drop <- df_hotdeck1 %>% select(-(Wettercode_imp: Wettercode_imp.2))
 df_drop <- cbind(df_drop, df_hotdeck2$Bewoelkung)
@@ -53,17 +56,7 @@ sum(is.na(df_drop$Bewoelkung))
 
 
 ```
-ggplot(df_hotdeck1) +
-  geom_point(aes(x=Sleep, y=Umsatz, color=Sleep_imp))
 
-
-
-
-df_hotdeck2 <- df_all %>%  hotdeck(ord_var = "Dream")
-df_hotdeck2 %>% aggr(combined=TRUE, numbers=TRUE)
-
-df_hotdeck3 <- df_hotdeck2 %>%  hotdeck(ord_var = "Sleep")
-df_hotdeck3 %>% aggr(combined=TRUE, numbers=TRUE)
 
 # VIM Iterative Robust Model Imputation (IRMI)
 df_irmi <- sleep %>%  irmi()
