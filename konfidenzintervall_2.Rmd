@@ -2,10 +2,10 @@
 title: "Konfidenzintervall 2.0"
 output: html_notebook
 ---
-Fahrplan
-
-- Datensätze zusammenfügen
-- Umsatz je Warengruppe voraussagen, wenn (kein) Feiertag
+- To Do:
+ Wochentage als Variable einfügen
+ Monate als Variable einfügen
+ Warm/kalt Variable?
 
 ? wieso hat df_all 150 Zeilen mehr? Feiertage die nicht als Datum erhalten waren?
 
