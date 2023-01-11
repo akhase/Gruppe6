@@ -2,7 +2,7 @@
 title: "Datenvorbereitung neuronales Netz"
 output: html_notebook
 ---
-- runden ist oplötzlich wieder weg
+- na s in sonnig, temperatur eliminiert
 
 ```{r}
 ###################################################
@@ -34,20 +34,23 @@ umsatz_vorbereitung <- df_drop
 #variablen löschen, die wir nicht mehr haben wollen
 
 umsatz_vorbereitung$Umsatz <- round(umsatz_vorbereitung$Umsatz)
-#str(umsatz_vorbereitung)
 umsatz_vorbereitung$Temperatur <- round(umsatz_vorbereitung$Temperatur)
 
 View(umsatz_vorbereitung)
 str(umsatz_vorbereitung)
 names(umsatz_vorbereitung)
 
+sum(is.na(umsatz_vorbereitung$Warengruppe))
+sum(is.na(umsatz_vorbereitung$Umsatz))
+sum(is.na(umsatz_vorbereitung$Bewoelkung_imp))
+sum(is.na(umsatz_vorbereitung$Temperatur))
+sum(is.na(umsatz_vorbereitung$Wettercode_imp))
+sum(is.na(umsatz_vorbereitung$Feiertage))
+sum(is.na(umsatz_vorbereitung$Schulferien))
+sum(is.na(umsatz_vorbereitung$Sonnig))
+
 ###################################################
 ### Data Preparation ####
-
-# Recoding of the variables into one-hot -> 0 1 encoded (dummy -> ja nein/ 1 0 Variablen) variables
-#dummy_list <- c("view", "condition")
-#house_pricing_dummy = dummy_cols(house_pricing, dummy_list)
-#names(house_pricing_dummy)
 
 dummy_list <- c("Warengruppe", "Bewoelkung_imp")
 umsatz_vorbereitung_dummy = dummy_cols(umsatz_vorbereitung,dummy_list)
@@ -57,28 +60,14 @@ names(umsatz_vorbereitung_dummy)
 warengruppe_dummies = c('Warengruppe_1', 'Warengruppe_2', 'Warengruppe_3', 'Warengruppe_4', 'Warengruppe_5', 'Warengruppe_6')
 bewoelkung_dummies = c('Bewoelkung_0', 'Bewoelkung_1', 'Bewoelkung_2', 'Bewoelkung_3','Bewoelkung_4','Bewoelkung_5','Bewoelkung_6','Bewoelkung_7','Bewoelkung_8')
 
-str(umsatz_vorbereitung_dummy)
 ###################################################
 ### Selection of the Feature Variables and the Label Variable ####
 
-# Selection of the features (the independent variables used to predict the dependent)
-#features <- c('sqft_lot', 'waterfront', 'grade', 'bathrooms', view_dummies, condition_dummies)
-#das was man reingibt
-#features <- c('sqft_lot', 'waterfront', 'grade', 'bathrooms', condition_dummies, view_dummies)
-# Selection of the label (the dependent variable)
-#das was man vorhersagen will
-#labels <- 'price'
-
-features <- c('Warengruppe','Temperatur','Wettercode_imp','Feiertage','Schulferien','Bewoelkung_imp','Sonnig')
+features <- c('Warengruppe','Temperatur','Wettercode_imp','Feiertage','Schulferien','Bewoelkung_imp','Sonnig_imp')
 labels <- 'Umsatz'
 
 ###################################################
 ### Selection of Training, Validation and Test Data ####
-
-# Look at the data
-#str(house_pricing_dummy)
-
-str(umsatz_vorbereitung_dummy)
 
 # Setting the random counter to a fixed value, so the random initialization stays the same (the random split is always the same)
 set.seed(1)
@@ -101,7 +90,6 @@ validation_labels <- umsatz_vorbereitung_dummy[assignment == 2, labels]  # subse
 
 test_features <- umsatz_vorbereitung_dummy[assignment == 3, features]   # subset umsatz_vorbereitung_dummy to test indices only
 test_labels <- umsatz_vorbereitung_dummy[assignment == 3, labels]   # subset umsatz_vorbereitung_dummy to test indices only
-
 
 
 ```

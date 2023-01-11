@@ -2,7 +2,10 @@
 title: "R Notebook"
 output: html_notebook
 ---
-
+Overfitting
+- weniger Prameter
+- mehr epochen
+- nochmal relevante Zusammenhänge filtern -> cor oder heat
 ```{r}
 
 ### Installation von Python und TensorFlow (nur einmalig nötig)
@@ -68,11 +71,11 @@ model.summary()
 ### Schätzung des neuronalen Netzes
 ```{python}
 
-# Definition der Kosten-(Loss-)Funktion und der Optimierungsfunktion mit seinen Hyperparametern
+# Definition der Kosten-(Loss-)Funktion und der Optimierungsfunktion mit Hyperparametern
 model.compile(loss="mse", optimizer=Adam(learning_rate=0.001))
 
 # Schaetzung des Modells
-history = model.fit(training_features, training_labels, epochs=100,
+history = model.fit(training_features, training_labels, epochs=150,
                     validation_data = (validation_features, validation_labels), verbose=0)
                     
 # Ggf. Speichern des geschaetzten Modells

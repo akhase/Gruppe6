@@ -17,7 +17,6 @@ library(lubridate)
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
-#install.packages("data.table")
 
 ```
 Einlesen der Datensätze

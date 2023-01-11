@@ -5,7 +5,7 @@ output: html_notebook
 
 - Achsenbeschriftungen
 - cor wieso negative Werte?
-
+- sollte man nachdem man Bewoelkung NAS eliminiert hat erst Sonnig einführen? Oder lieber sonnig raten auf Basis von fertigem bw
 
 - unter 4 ist es sonnig
 
@@ -19,19 +19,11 @@ library(tidyr)
 
 # Zeilen löschen an denen Warengruppe und Umsatz NA ist
 df_all_short <- df_all[complete.cases(df_all$Warengruppe),]
-
-#sum(is.na(df_all_short$Warengruppe))
-#sum(is.na(df_hotdeck1$Umsatz))
-#sum(is.na(df_hotdeck1$Schulferien))
-#sum(is.na(df_hotdeck1$Ferientag))
-
-#
 df_all_short %>% aggr(combined=TRUE, numbers=TRUE, plot = TRUE)
 
 # löschen der Zeilen, wenn NA vorkommt, um zu sehen was nicht passt
 df_all_deletion <- na.omit(df_all)
 df_all_deletion %>% aggr(combined=TRUE, numbers=TRUE)
-
 
 # VIM Hot-Deck Imputation
 #df_wettercode <- df_all[,c("Datum","Wettercode", "Temperatur", "Windgeschwindigkeit", "Bewoelkung")]
@@ -44,29 +36,34 @@ df_hotdeck1 %>% aggr(combined=TRUE, numbers=TRUE)
 df_hotdeck2 <- hotdeck(df_hotdeck1, variable = "Bewoelkung", domain_var = c("Wettercode"), impNA = TRUE)
 df_hotdeck2 %>% aggr(combined=TRUE, numbers=TRUE)
 
-#check, ob alle NAs ersetzt worden sind
-sum(is.na(df_hotdeck2$Bewoelkung))
+df_hotdeck3 <- hotdeck(df_hotdeck2, variable = "Temperatur", domain_var = c("Wettercode"), impNA = TRUE)
+df_hotdeck3 %>% aggr(combined=TRUE, numbers=TRUE)
+
+df_hotdeck4 <- hotdeck(df_hotdeck3, variable = "Sonnig", domain_var = c("Bewoelkung"), impNA = TRUE)
+df_hotdeck4 %>% aggr(combined=TRUE, numbers=TRUE)
+
+sum(is.na(df_hotdeck4$Sonnig))
 
 #ggplot(df_hotdeck1) +
 #  geom_point(aes(x=Warengruppe, y=Umsatz, color=Wettercode_imp))
 
 #unnötige true false spalten löschen
-df_drop <- df_hotdeck2 %>% select(-(Wettercode_imp: Wettercode_imp.2))
+df_drop <- df_hotdeck4 %>% select(-(Wettercode_imp: Wettercode_imp.2))
 df_drop <- df_drop %>% select(-(Bewoelkung_imp))
+df_drop <- df_drop %>% select(-(Temperatur_imp))
+df_drop <- df_drop %>% select(-(Sonnig_imp))
+
 
 df_drop <- df_drop %>% select(-(Datum))
 df_drop <- df_drop %>% select(-(KielerWoche))
 df_drop <- df_drop %>% select(-(Windgeschwindigkeit))
 
-View(df_drop)
-
-sum(is.na(df_drop$Bewoelkung))
+#sum(is.na(df_drop$Bewoelkung))
 
 names(df_drop)[3] <- "Bewoelkung_imp"
 names(df_drop)[5] <- "Wettercode_imp"
-
-View(df_drop)
-sum(is.na(df_drop$Bewoelkung))
+names(df_drop)[4] <- "Temperatur_imp"
+names(df_drop)[8] <- "Sonnig_imp"
 
 
 # VIM Iterative Robust Model Imputation (IRMI)
@@ -78,11 +75,11 @@ sum(is.na(df_drop$Bewoelkung))
 #ggplot(df_irmi) +
   #geom_point(aes(x=Bewoelkung, y=Umsatz, color=Bewoelkung_imp))
 
-
 # Impact
 cor(df_all_deletion$Umsatz, df_all_deletion$Bewoelkung)
-cor(df_hotdeck1$Umsatz, df_hotdeck1$Bewoelkung, use = "complete.obs")
+cor(df_hotdeck1$Umsatz, df_hotdeck1$Bewoelkung, use = "complete.obs") #je bewölkter es ist, desto weniger Umsatz
 cor(df_hotdeck2$Umsatz, df_hotdeck2$Bewoelkung, use = "complete.obs")
+cor(df_hotdeck4$Umsatz, df_hotdeck4$Sonnig, use = "complete.obs") #wenn es sonnig ist, steigt Umsatz
 #cor(df_irmi$Umsatz, df_irmi$Bewoelkung)
 
 ```
