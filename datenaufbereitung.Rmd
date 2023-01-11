@@ -3,6 +3,9 @@ title: "Datenaufbereitung"
 output: html_notebook
 ---
 
+- Achsenbeschriftungen
+- cor wieso negative Werte?
+
 ```{r}
 library(readr)
 library(VIM)
@@ -22,7 +25,7 @@ df_all_short <- df_all[complete.cases(df_all$Warengruppe),]
 #
 df_all_short %>% aggr(combined=TRUE, numbers=TRUE, plot = TRUE)
 
-# löschen der Zeilen, wenn NA vorkommt
+# löschen der Zeilen, wenn NA vorkommt, um zu sehen was nicht passt
 df_all_deletion <- na.omit(df_all)
 df_all_deletion %>% aggr(combined=TRUE, numbers=TRUE)
 
@@ -56,24 +59,27 @@ names(df_drop)[8] <- "Wettercode_imp"
 View(df_drop)
 sum(is.na(df_drop$Bewoelkung))
 
-
-```
+df_all_short <- df_all_short %>% select(-(Datum))
+str(df_all_short)
 
 
 # VIM Iterative Robust Model Imputation (IRMI)
-df_irmi <- sleep %>%  irmi()
-ggplot(sleep_irmi) +
-  geom_point(aes(x=Sleep, y=Dream, color=Sleep_imp))
+df_irmi <- irmi(df_all_short)
+
+aggr(df_irmi, delimiter ="_imp" )
+
+df_irmi <- irmi(df_all_short)
+ggplot(df_irmi) +
+  geom_point(aes(x=Bewoelkung, y=Umsatz, color=Bewoelkung_imp))
 
 
 # Impact
-cor(sleep_deletion$Sleep, sleep_deletion$Dream)
-cor(sleep_hotdeck1$Sleep, sleep_hotdeck1$Dream, use = "complete.obs")
-cor(sleep_hotdeck2$Sleep, sleep_hotdeck2$Dream, use = "complete.obs")
-cor(sleep_hotdeck3$Sleep, sleep_hotdeck3$Dream, use = "complete.obs")
-cor(sleep_irmi$Sleep, sleep_irmi$Dream)
-
-
+cor(df_all_deletion$Umsatz, df_all_deletion$Bewoelkung)
+cor(df_hotdeck1$Umsatz, df_hotdeck1$Bewoelkung, use = "complete.obs")
+cor(df_hotdeck2$Umsatz, df_hotdeck2$Bewoelkung, use = "complete.obs")
+cor(df_irmi$Umsatz, df_irmi$Bewoelkung)
 
 ```
+
+
 
