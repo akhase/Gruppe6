@@ -6,21 +6,24 @@ output: html_notebook
  Wochentage als Variable einfügen
  Monate als Variable einfügen
  Warm/kalt Variable?
+ 
 
 ? wieso hat df_all 150 Zeilen mehr? Feiertage die nicht als Datum erhalten waren?
+? NA´s für Konfidenzintervall ??
 
 ```{r}
 library(readr)
 library(lubridate)
 library(ggplot2)
 library(dplyr)
+library(tidyverse)
 #install.packages("data.table")
 
 ```
 Einlesen der Datensätze
 ```{r}
 #weil mein RStudio dumm ist und sonst nicht weiß wo es die Daten findet und wo es arbeiten soll:))
-setwd("C:/Users/lockf/OneDrive/Desktop/Gruppe6")
+#setwd("C:/Users/lockf/OneDrive/Desktop/Gruppe6")
 umsatzdaten <- read_csv("umsatzdaten_gekuerzt.csv")
 kiwo <- read_csv("kiwo.csv")
 wetter <- read_csv("wetter.csv")
@@ -28,9 +31,7 @@ ferien <- read.csv("C:/Users/lockf/OneDrive/Dokumente/Ferien_Feiertage_sh.csv", 
 #damit Datumsspalte richtige Formatierung hat und man später ordentlich mergen kann
 ferien$Datum <- as.Date(ferien$Datum, format = "%Y-%m-%d")
 
-
 ```
-
 
 ```{r}
 umsatzdaten_kiwo <-merge(x = umsatzdaten, y = kiwo, all = TRUE)
@@ -42,12 +43,18 @@ umsatzdaten_kiwo_wetter <- merge(x = umsatzdaten_kiwo, y = wetter, all = TRUE)
 
 df_all <- merge(x= umsatzdaten_kiwo_wetter, y = ferien, all = TRUE)
 
-ggplot(subset(df_all, Warengruppe %in% c("1")), aes(x = Schulferien, y = Umsatz, fill=Warengruppe) )+
-  geom_bar(stat = "identity")
+df_all$Sonnig <- ifelse(df_all$Bewoelkung < 4, 1,0)
+df_all <- df_all %>% drop_na(Warengruppe)
 
-# Berechnung von Mittelwerten, Standardabweichungen, Standardfehlern und Konfidenzintervallen
-my_konf <- df_all %>%
-  group_by(Warengruppe) %>%
+View(df_all)
+View(my_konf_sonnig)
+
+#ggplot(subset(df_all, Warengruppe %in% c("1")), aes(x = Schulferien, y = Umsatz, fill=Warengruppe) )+
+  #geom_bar(stat = "identity")
+
+# gutes Wetter/ schlechtes Wetter und Umsatz
+my_konf_sonnig <- df_all %>%
+  group_by(Sonnig) %>%
   summarise(
     n=n(),
     mean=mean(Umsatz),
@@ -56,14 +63,44 @@ my_konf <- df_all %>%
   mutate( se=sd/sqrt(n))  %>%
   mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
 
-View(df_all)
-View(my_konf)
-# Confidence Interval
-ggplot(my_konf) +
-  geom_bar( aes(x=Warengruppe, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
-  geom_errorbar( aes(x=Warengruppe, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+# Plot gutes/schlechtes Wetter
+ggplot(my_konf_sonnig) +
+  geom_bar( aes(x=Sonnig, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Sonnig, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
+View(my_konf_sonnig)
+
+# Schulferien und Umsatz 
+my_konf_schulferien <- df_all %>%
+  group_by(Schulferien) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+#Confidence Interval
+ggplot(my_konf_schulferien) +
+  geom_bar( aes(x=Schulferien, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Schulferien, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
   ggtitle("using confidence interval")
 
-```
+# Feiertage und Umsatz 
+my_konf_feiertage <- df_all %>%
+  group_by(Feiertage) %>%
+  summarise(
+    n=n(),
+    mean=mean(Umsatz),
+    sd=sd(Umsatz)
+  ) %>%
+  mutate( se=sd/sqrt(n))  %>%
+  mutate( ic=se * qt((1-0.05)/2 + .5, n-1))
+
+ggplot(my_konf_feiertage) +
+  geom_bar( aes(x=Feiertage, y=mean), stat="identity", fill="forestgreen", alpha=0.5) +
+  geom_errorbar( aes(x=Feiertage, ymin=mean-ic, ymax=mean+ic), width=0.4, colour="orange", alpha=0.9, size=1.5) +
+  ggtitle("using confidence interval")
 
 ```

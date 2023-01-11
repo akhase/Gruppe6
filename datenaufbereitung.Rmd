@@ -3,7 +3,6 @@ title: "Datenaufbereitung"
 output: html_notebook
 ---
 
-
 ```{r}
 library(readr)
 library(VIM)
@@ -46,11 +45,14 @@ sum(is.na(df_hotdeck2$Bewoelkung))
 #  geom_point(aes(x=Warengruppe, y=Umsatz, color=Wettercode_imp))
 
 #unnötige true false spalten löschen
-df_drop <- df_hotdeck1 %>% select(-(Wettercode_imp: Wettercode_imp.2))
-df_drop <- cbind(df_drop, df_hotdeck2$Bewoelkung)
-df_drop <- df_drop %>% select(-(Bewoelkung))
-names(df_drop)[10] <- "Bewoelkung_imp"
-names(df_drop)[7] <- "Wettercode_imp"
+df_drop <- df_hotdeck2 %>% select(-(Wettercode_imp: Wettercode_imp.2))
+df_drop <- df_drop %>% select(-(Bewoelkung_imp))
+
+sum(is.na(df_drop$Bewoelkung))
+
+names(df_drop)[5] <- "Bewoelkung_imp"
+names(df_drop)[8] <- "Wettercode_imp"
+
 View(df_drop)
 sum(is.na(df_drop$Bewoelkung))
 
