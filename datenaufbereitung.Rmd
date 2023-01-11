@@ -6,6 +6,9 @@ output: html_notebook
 - Achsenbeschriftungen
 - cor wieso negative Werte?
 
+
+- unter 4 ist es sonnig
+
 ```{r}
 library(readr)
 library(VIM)
@@ -51,33 +54,36 @@ sum(is.na(df_hotdeck2$Bewoelkung))
 df_drop <- df_hotdeck2 %>% select(-(Wettercode_imp: Wettercode_imp.2))
 df_drop <- df_drop %>% select(-(Bewoelkung_imp))
 
+df_drop <- df_drop %>% select(-(Datum))
+df_drop <- df_drop %>% select(-(KielerWoche))
+df_drop <- df_drop %>% select(-(Windgeschwindigkeit))
+
+View(df_drop)
+
 sum(is.na(df_drop$Bewoelkung))
 
-names(df_drop)[5] <- "Bewoelkung_imp"
-names(df_drop)[8] <- "Wettercode_imp"
+names(df_drop)[3] <- "Bewoelkung_imp"
+names(df_drop)[5] <- "Wettercode_imp"
 
 View(df_drop)
 sum(is.na(df_drop$Bewoelkung))
 
-df_all_short <- df_all_short %>% select(-(Datum))
-str(df_all_short)
-
 
 # VIM Iterative Robust Model Imputation (IRMI)
-df_irmi <- irmi(df_all_short)
+#df_irmi <- irmi(df_all_short)
 
-aggr(df_irmi, delimiter ="_imp" )
+#aggr(df_irmi, delimiter ="_imp" )
 
-df_irmi <- irmi(df_all_short)
-ggplot(df_irmi) +
-  geom_point(aes(x=Bewoelkung, y=Umsatz, color=Bewoelkung_imp))
+#df_irmi <- irmi(df_all_short)
+#ggplot(df_irmi) +
+  #geom_point(aes(x=Bewoelkung, y=Umsatz, color=Bewoelkung_imp))
 
 
 # Impact
 cor(df_all_deletion$Umsatz, df_all_deletion$Bewoelkung)
 cor(df_hotdeck1$Umsatz, df_hotdeck1$Bewoelkung, use = "complete.obs")
 cor(df_hotdeck2$Umsatz, df_hotdeck2$Bewoelkung, use = "complete.obs")
-cor(df_irmi$Umsatz, df_irmi$Bewoelkung)
+#cor(df_irmi$Umsatz, df_irmi$Bewoelkung)
 
 ```
 

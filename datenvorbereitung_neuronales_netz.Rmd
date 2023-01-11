@@ -2,7 +2,7 @@
 title: "Datenvorbereitung neuronales Netz"
 output: html_notebook
 ---
-
+- runden ist oplötzlich wieder weg
 
 ```{r}
 ###################################################
@@ -30,6 +30,15 @@ for (pkg in pkgs) {
 
 # Reading the data file
 umsatz_vorbereitung <- df_drop
+
+#variablen löschen, die wir nicht mehr haben wollen
+
+umsatz_vorbereitung$Umsatz <- round(umsatz_vorbereitung$Umsatz)
+#str(umsatz_vorbereitung)
+umsatz_vorbereitung$Temperatur <- round(umsatz_vorbereitung$Temperatur)
+
+View(umsatz_vorbereitung)
+str(umsatz_vorbereitung)
 names(umsatz_vorbereitung)
 
 ###################################################
@@ -41,7 +50,7 @@ names(umsatz_vorbereitung)
 #names(house_pricing_dummy)
 
 dummy_list <- c("Warengruppe", "Bewoelkung_imp")
-umsatz_vorbereitung_dummy = dummy_cols(df_drop,dummy_list)
+umsatz_vorbereitung_dummy = dummy_cols(umsatz_vorbereitung,dummy_list)
 names(umsatz_vorbereitung_dummy)
 
 # Definition of lists for each one-hot encoded variable (just to make the handling easier)
@@ -60,7 +69,7 @@ str(umsatz_vorbereitung_dummy)
 #das was man vorhersagen will
 #labels <- 'price'
 
-features <- c('Datum','Warengruppe','KielerWoche','Temperatur','Windgeschwindigkeit','Wettercode_imp','Feiertage','Schulferien','Bewoelkung_imp')
+features <- c('Warengruppe','Temperatur','Wettercode_imp','Feiertage','Schulferien','Bewoelkung_imp','Sonnig')
 labels <- 'Umsatz'
 
 ###################################################
@@ -92,5 +101,7 @@ validation_labels <- umsatz_vorbereitung_dummy[assignment == 2, labels]  # subse
 
 test_features <- umsatz_vorbereitung_dummy[assignment == 3, features]   # subset umsatz_vorbereitung_dummy to test indices only
 test_labels <- umsatz_vorbereitung_dummy[assignment == 3, labels]   # subset umsatz_vorbereitung_dummy to test indices only
+
+
 
 ```
